@@ -100,7 +100,26 @@ Visual Studio makes it easy to create a Web API and deploy it to Azure using the
 1. Update the Get function to be:
 
      ```c#
-     d
+      [HttpGet(Name = "GetWeatherForecast")]
+      [SwaggerOperation(Summary = "Get Weather Forecast",
+          Description = "Get a weather forecast for a specified city",
+          OperationId = "GetWeatherForecast",
+          Tags = ["Weather"])]
+      public ForecastResponse Get([FromQuery, SwaggerParameter("The city to get the forecast for"), Required] string City)
+      {
+          var response = new ForecastResponse
+          {
+              WeatherForecast = Enumerable.Range(1, 5).Select(index => new WeatherForecast
+              {
+                  Date = DateTime.Now.AddDays(index),
+                  //DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+                  TemperatureC = Random.Shared.Next(-20, 55),
+                  Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+              }).ToArray()
+          };
+      
+          return response;
+      }
      ```
      
 1. **Save** all your edits.
